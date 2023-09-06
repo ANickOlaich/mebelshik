@@ -1,0 +1,51 @@
+# File produced by Open Asset Import Library (http://www.assimp.sf.net)
+# (assimp v3.1.0)
+
+newmtl Satin
+illum 1
+map_Kd test4_textures\ph18049.jpg
+
+newmtl Khrom
+illum 1
+map_Kd test4_textures\ph17992.jpg
+
+newmtl Stoleshnitsa 28 mm <BAZA>
+illum 1
+map_Kd test4_textures\S499.jpg
+
+newmtl Chernyy
+Kd 0 0 0
+illum 1
+
+newmtl LKhDF B³le 0110 2800kh1030kh3mm
+Kd 244 244 244
+illum 1
+
+newmtl DSP Kronospan K001 PW Dub kraft belyy_ 2800kh2070kh16
+illum 1
+map_Kd test4_textures\ph18129.jpg
+
+newmtl PVKh 1 BAZA
+illum 1
+map_Kd test4_textures\ph17992.jpg
+
+newmtl DSP SWISS KRONO D881 PE Alyum³n³y 2800kh2070kh16 mm
+illum 1
+map_Kd test4_textures\ph18160.jpg
+
+newmtl Noname
+illum 1
+map_Kd test4_textures\default.bmp
+
+newmtl Stal_ seraya
+Kd 26 26 26
+illum 1
+
+newmtl Furnitura
+illum 1
+map_Kd test4_textures\default.bmp
+
+newmtl Ushch³l_nyuvach tsokol_niy 16 mm _L _ 3000mm_ Thermoplast
+Kd 224 224 224
+illum 1
+

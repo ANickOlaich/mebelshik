@@ -1,0 +1,27 @@
+# File produced by Open Asset Import Library (http://www.assimp.sf.net)
+# (assimp v3.1.0)
+
+newmtl DSP 18 mm <BAZA>
+Kd 0 255 0
+illum 1
+
+newmtl PVKh 0_5 BAZA
+illum 1
+map_Kd test1_textures\default.bmp
+
+newmtl Chernyy
+Kd 0 0 0
+illum 1
+
+newmtl LKhDF B³le 0110 Kronospan 2800kh2070kh3mm
+Kd 247 247 247
+illum 1
+
+newmtl Prof³l_ GOLA gorizontal_niy_ L _ 4100 mm_ type L_ Scilm
+illum 1
+map_Kd test1_textures\default.bmp
+
+newmtl Fasad 18 mm <BAZA>
+illum 1
+map_Kd test1_textures\default.bmp
+

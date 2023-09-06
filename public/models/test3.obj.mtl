@@ -1,0 +1,23 @@
+# File produced by Open Asset Import Library (http://www.assimp.sf.net)
+# (assimp v3.1.0)
+
+newmtl Prof³l_ GOLA gorizontal_niy_ L _ 4100 mm_ type L_ Scilm
+illum 1
+map_Kd test3_textures\ph18073.jpg
+
+newmtl DSP SWISS KRONO 6927 OV Dub Kordova 2800kh2070kh18mm
+illum 1
+map_Kd test3_textures\DSP SWISS KRONO 6927 OV Dub Kordova 2800kh2070kh18mm.jpg
+
+newmtl PVKh 0_5 BAZA
+illum 1
+map_Kd test3_textures\default.bmp
+
+newmtl Chernyy
+Kd 0 0 0
+illum 1
+
+newmtl LKhDF B³le 0110 Kronospan 2800kh2070kh3mm
+Kd 247 247 247
+illum 1
+

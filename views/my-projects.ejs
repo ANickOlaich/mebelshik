@@ -1,0 +1,103 @@
+<%- include('partials/header'); -%>
+<%- include('partials/top-menu'); -%>
+<div id="app">
+
+<h1>Мои проекты</h1>
+<div class="shadow p-3 mb-5 bg-body rounded">
+    <div class="row">
+        <div class="col">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProjectModal">
+                Добавить
+            </button>
+        </div>
+        <div class="col">
+            <strong>Общее количество:{{projects.length}}</strong>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="addProjectModal" tabindex="-1" aria-labelledby="addProjectModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addProjectModalLabel">Новый проект</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+      </div>
+        <div class="modal-body ">
+            <form>
+                <div class="mb-3">
+                    <label for="name" class="col-form-label">Название</label>
+                    <input 
+                        type="text" 
+                        class="form-control" 
+                        id="name"
+                        v-model="name"
+                        :placeholder="placeholderString"
+                    >
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="col-form-label">Описание</label>
+                    <textarea 
+                        class="form-control" 
+                        id="description"
+                        v-model="description"
+                    ></textarea>
+                </div>
+            </form>
+        </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+        <button type="button" class="btn btn-primary" v-on:click="newProject">Сохранить</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="shadow p-3 mb-5 bg-body rounded">
+    <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">id</th>
+        <th scope="col">Название</th>
+        <th scope="col">Описание</th>
+        <th scope="col">Статус</th>
+        <th scope="col">Создан</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="project in projects" >
+        
+        <th scope="row">{{project.id}}</th>
+        <td>{{project.name}}</td>
+        <td>{{project.description}}</td>
+        <td>{{project.status}}</td>
+        <td>{{project.createdAt}}</td>
+        <td>
+           
+            <div class="btn-group" role="group">
+                <a class="btn btn-outline-primary" :href="/project/+project.id">Редактировать</a>
+                <a class="btn btn-outline-primary" :href="/tasks/+project.id">Задания</a>
+                <a class="btn btn-outline-primary" :href="/tasks/+project.id">Замер</a>
+                <a class="btn btn-outline-primary" :href="/tasks/+project.id">Модель</a>
+			</div>
+        </td>
+       
+      </tr>
+     
+    </tbody>
+    </table>
+</div>
+
+</div>
+</div>
+</div>
+</div>
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script src="/js/my-projects.js"></script>
+</body>
+
+</html>

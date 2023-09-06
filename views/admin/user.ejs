@@ -1,0 +1,112 @@
+<%- include('partials/head'); -%>
+<%- include('partials/top-menu'); -%>      
+<%- include('partials/left-menu'); -%> 
+
+<section style="background-color: #eee;" class="p-2 m-1">
+  <div class="row">
+    <div class="col-4">
+      <div class="card mb-4">
+        <div class="card-body text-center">
+          <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
+            class="rounded-circle img-fluid" style="width: 150px;">
+          <h5 class="my-3"><%=user.name%></h5>
+          <% if(user.is_admin) {%>
+          <p class="text-muted mb-1">Администратор</p>
+          <%} else{%>
+            <p class="text-muted mb-1">Пользователь</p>
+          <%}%>
+        </div>
+      </div>
+      <div class="card mb-4 mb-lg-0">
+        <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+          <button 
+            type="button" 
+            class="btn btn-outline-success"
+
+            >Сделать админом</button>
+          <button 
+            type="button" 
+            class="btn btn-outline-danger"
+            v-on:click="deleteUser(<%=user.id%>)"
+            >Удалить пользователя</button>
+        </div>
+      </div>
+      
+    </div>
+    <div class="col-8">
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-sm-3">
+              <p class="mb-0">Имя</p>
+            </div>
+            <div class="col-sm-9">
+              <p class="text-muted mb-0"><%=user.name%></p>
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-sm-3">
+              <p class="mb-0">Email</p>
+            </div>
+            <div class="col-sm-9">
+              <p class="text-muted mb-0"><%=user.email%></p>
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-sm-3">
+              <p class="mb-0">Telegram</p>
+            </div>
+            <div class="col-sm-9">
+              <p class="text-muted mb-0"><%=user.telegram%></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section style="background-color: #eee;" class="p-2 m-1">
+  <div class="row">
+    <div class="col-12">
+      <div class="card mb-4 mb-md-0">
+        <div class="card-body">
+          <p class="mb-4"> Проекты
+          </p>
+          <% projects.forEach(function(project){%>
+            <p>
+              <a href="/project/<%=project.id%>"><%=project.name%></a>
+            </p>
+          <% }) %>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</section>
+<section style="background-color: #eee;" class="p-2 m-1">
+  <div class="row">
+    <div class="col-12">
+      <div class="card mb-4 mb-md-0">
+        <div class="card-body">
+          <p class="mb-4"> Открытые задачи
+          </p>
+          <% tasks.forEach(function(task){%>
+            <p>
+              <a href="/tasks/<%=task.project_id%>"><%=task.name%>" : "<%=task.description%></a>
+            </p>
+          <% }) %>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</section>
+                    
+
+                      
+
+<%- include('partials/footer'); -%> 

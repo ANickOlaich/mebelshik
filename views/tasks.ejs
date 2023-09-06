@@ -1,0 +1,241 @@
+<%- include('partials/header'); -%>
+<%- include('partials/top-menu'); -%>
+<div id="app">
+    <div class="container-fluid">
+        <div class="row" >
+            <div class="col-md-12">
+                <div class="row shadow p-3 mb-3 bg-body-tertiary rounded">
+                    <div class="col-md-8">
+                        <h3>
+                            <%=projectData.name%>
+                        </h3>
+                        <p>
+                           <%=projectData.description%>
+                        </p>
+                    </div>
+                    <div class="col-md-4">
+                        <img alt="<%=projectData.name%>" src="" />
+                    </div>
+                </div>
+                <div class="row shadow p-3 mb-3 bg-body-tertiary rounded">
+                    <div class="row">
+                        <div class="col">  
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addURLModal">
+                                 Добавить
+                            </button>    
+                        </div>
+                        <div class="col">  
+                            <button 
+                                type="button" 
+                                class="btn btn-primary" 
+                                
+                                v-on:click="downloadTXT"
+                            >
+                                 Скачать TXT
+                            </button>    
+                        </div>
+                        <div class="col">
+                            <div class="form-check">
+                                <input 
+                                    class="form-check-input" 
+                                    type="checkbox" 
+                                    id="flexCheckDefault"
+                                    v-model="viewDeleted"
+                                >
+                                <label class="form-check-label" for="flexCheckDefault">
+                                  Показывать удаленные
+                                </label>
+                              </div>     
+                              <div class="form-check">
+                                <input 
+                                    class="form-check-input" 
+                                    type="checkbox" 
+                                    id="flexCheckDefault"
+                                    v-model="viewExtendet"
+                                >
+                                <label class="form-check-label" for="flexCheckDefault">
+                                  Расширенный вид
+                                </label>
+                              </div>                           
+                        </div>
+                        <div class="col">
+                            <strong>Общее количество:{{tasks.length}}</strong>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12" v-if="!viewExtendet">
+                        <div v-for="(t,idx) in sortedTasks">
+                           
+                                <div class="row" v-if="!t.deleted||viewDeleted">
+                                
+                                    <div class="col-md-1">
+                                        <input 
+                                        class="form-check-input" 
+                                        type="checkbox" 
+                                        id="flexCheckDefault"
+                                        v-model="t.checked"
+                                        v-on:click="changeStatus(idx)"
+                                    >
+                                    </div>
+                                    <div class="col-md-2">{{t.name}}</div>
+                                    <div v-if="t.checked" class="opacity-25 col-md-9" >{{t.description}}</div>
+                                    <div v-else class="opacity-100 col-md-9" ><b>{{t.description}}</b></div>
+                                    <hr>
+                                </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12" v-if="viewExtendet">
+                        <div v-for="(t,idx) in sortedTasks">
+                        <div class="row row shadow p-1 mb-3 bg-body-tertiary rounded" v-if="!t.deleted||viewDeleted">
+                           
+                            <div class="col-md-2">
+                                <img class="img-fluid" :alt="t.description" :src="t.imageSrc" />
+                            </div>
+                            <div class="col-md-4">
+                                <dl>
+                                    <dd>
+                                        {{t.taskType}}
+                                    </dd>
+                                    <dd>
+                                        {{t.name}}
+                                    </dd>
+                                    <dt>
+                                        {{t.description}}
+                                    </dt> 
+                                    <dd>
+                                        <a :href="t.url">{{t.url}}</a>
+                                        
+                                    </dd>
+                                </dl>
+                            </div>
+                            <div class="col-md-3">
+                                <p>Автор: {{t.user.name}}</p>
+                                <p>Создано: {{t.createdAt}}</p>
+                                <p>Id: {{t.id}}</p>
+                                
+                            </div>
+                            <div class="col-md-3">
+                                <div class="btn-group btn-group" role="group">  
+                                    <button v-if="t.checked" class="btn btn-success" v-on:click="changeStatus(idx)">Выполнено</button>
+                                    <button v-else class="btn btn-warning" v-on:click="changeStatus(idx)">Новое</button>  
+                                    <button class="btn btn-outline-secondary" v-on:click="change(idx)">Изменить</button>
+                                    <button class="btn btn-outline-danger" v-on:click="deleteTask(idx)">Удалить</button>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+   <!-- Modal URL -->
+<div class="modal fade" id="addURLModal" tabindex="-1" aria-labelledby="addURLModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addURLModalLabel">Новое задание</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+        </div>
+          <div class="modal-body ">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row mb-3">
+                            <div class="col-md-3">
+                                <div >
+                                <img  class="img-fluid" :alt="task.description" :src="task.imageSrc" />
+                                </div>
+                            </div>
+                            <div class="col-md-9">
+                                <div class="input-group flex-nowrap mb-3 ps-3">
+                                    <span class="input-group-text" id="addon-wrapping">Название</span>
+                                    <input  
+                                    type="text" 
+                                    class="form-control" 
+                                    id="name"
+                                    v-model="task.name"
+                                    :placeholder="task.placeholderString"
+                                    />
+                                </div>  
+                                <div class="input-group mb-3 ps-3">
+                                    <label for="description" class="input-group-text">Описание</label>
+                                    <textarea 
+                                        class="form-control" 
+                                        id="description"
+                                        v-model="task.description"
+                                    ></textarea>
+                                </div>
+                                <div class="input-group mb-3 ps-3">
+                                    <label class="input-group-text" for="task_type">Тип</label>
+                                    <select 
+                                        v-model="task.task_type_id" 
+                                        class="form-select"
+                                        id="task_type"
+                                    >
+                                        <option v-for="t in taskType" v-bind:value="t.id">{{t.name}}</option>
+                                    </select>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="collapse" id="collapseExample">
+                            <div class="input-group mb-3">
+                                <label class="input-group-text" for="url">URL</label>
+                                <input 
+                                    type="text" 
+                                    class="form-control" 
+                                    id="url"
+                                    v-model="parser.url"
+                                    placeholder="Введите URL"
+                                >   
+                                <button class="btn btn-outline-secondary" type="button" id="button-addon2" v-on:click="parsing">Загрузить</button>
+                            </div>
+                            <div class="input-group mb-3">
+                                <label class="input-group-text" for="provider">Поставщик</label>
+                                <input type="text" class="form-control" placeholder="Поставщик" v-model="task.provider" >
+                            </div>
+                            <div class="input-group mb-3">
+                                <label class="input-group-text" for="provider">Артикул</label>
+                                <input type="text" class="form-control" placeholder="Артикул" v-model="task.sku" >
+                            </div>
+                            <div class="input-group mb-3">
+                                <label class="input-group-text" for="provider">Цена</label>
+                                <input type="text" class="form-control" placeholder="Цена" v-model="task.price" >
+                            </div>
+                        </div> 
+                    </div>
+                </div>
+          </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                Дополнительно
+              </button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+          <button type="button" class="btn btn-primary" v-on:click="newTask">Сохранить</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+</div>
+</div>
+</div>
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script src="/js/tasks.js"></script>
+</body>
+
+</html>

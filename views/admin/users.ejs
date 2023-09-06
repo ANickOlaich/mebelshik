@@ -1,0 +1,28 @@
+<%- include('partials/head'); -%>
+<%- include('partials/top-menu'); -%>      
+<%- include('partials/left-menu'); -%> 
+                    
+<section style="background-color: #eee;" class="p-2 m-1">
+<table class="table m-2">
+    <thead>
+      <tr>
+        <th scope="col">id</th>
+        <th scope="col">Имя</th>
+        <th scope="col">E-mail</th>
+        <th scope="col">Администратор</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="user in users">
+        <th scope="row">{{user.id}}</th>
+        <td>{{user.name}}</td>
+        <td>{{user.email}}</td>
+        <td>{{user.is_admin}}</td>
+        <td><a :href="'/admin/user/'+user.id" class="btn btn-primary" tabindex="-1" role="button" aria-disabled="true">Инфо</a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</section>                      
+
+<%- include('partials/footer'); -%> 

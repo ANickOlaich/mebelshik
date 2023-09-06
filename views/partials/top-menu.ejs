@@ -1,0 +1,58 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-2">
+                <div class="page-header">
+                    <h1>
+                        Task`s
+                    </h1>
+                </div>
+            </div>
+            <div class="col-md-10">
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/">Главная</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/3d-test">3D Test</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled" href="">Messages</a>
+                    </li>
+                    <% if (is_admin) {%>
+                        <li class="nav-item ml-md-auto">
+                            <a class="nav-link" href="/admin">Админка</a>
+                        </li>
+                    <%}%>
+                    <%if (!logged_in) { %>
+                        <li class="nav-item ml-md-auto">
+                            <a class="nav-link" href="/auth">Вход</a>
+                        </li>
+                    <% } else { %>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/my-projects">Мои проекты</a>
+                        </li>
+                        <li class="nav-item ml-md-auto">
+                            <a class="nav-link" href="/user/logout">Выход</a>
+                        </li> 
+                    <%}%>
+                </ul>
+            </div>
+        </div>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="#">Home</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="#">Library</a>
+                </li>
+                <li class="breadcrumb-item active">
+                    Data
+                </li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
