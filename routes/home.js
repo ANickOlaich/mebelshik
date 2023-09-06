@@ -1,13 +1,20 @@
 const router = require('express').Router();
-const { User, Project } = require('../models');
+const { User, Project, Task } = require('../models');
 const withAuth = require('../utils/auth');
 
 router.get('/', async (req, res) => {
+  const dataProjects = await Project.findAll({
+    where:{
+      public:true
+    },
+  });
+  console.log(dataProjects);
     try {
       res.render('index', {
         logged_in: req.session.logged_in,
         is_admin: req.session.is_admin,
-        title:"Главная"
+        title:"Главная",
+        projects:dataProjects
       });
     } catch (err) {
       res.status(500).json(err);

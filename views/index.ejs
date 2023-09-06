@@ -1,6 +1,38 @@
 <%- include('partials/header'); -%>
 <%- include('partials/top-menu'); -%>
 <h1>Главная</h1>
-<%- include('partials/footer'); -%>
+<div class="container-fluid">
+	<div class="row">
+        <% projects.forEach(function(p){%>
+            <div class="col-md-12">
+                <a href="/view-project/<%=p.id%>">
+                    <div class="row shadow p-3 mb-5 bg-body rounded">
+                        <div class="col-md-3">
+                            <img alt="Bootstrap Image Preview" src="<%=p.image_url%>" />
+                        </div>
+                        <div class="col-md-9">
+                            <h3>
+                                <%=p.name%>
+                            </h3>
+                            <p>
+                                <%=p.description%>
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        <%})%>
+	</div>
+</div>
+
+
+</div>
+</div>
+</div>
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+</body>
+
+</html>
 
            
