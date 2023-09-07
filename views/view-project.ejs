@@ -1,0 +1,62 @@
+<%- include('partials/header'); -%>
+<%- include('partials/top-menu'); -%>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+			
+			<div class="row border rounded mb-2">
+				<div class="col-md-6">
+					<img class="img-fluid" alt="<%=project.name%>" src="<%=project.image_url%>" />
+				</div>
+				<div class="col-md-6">
+					<h1><%=project.name%></h1>
+                            <p><%=project.description%></p>
+                            <p>Автор: <%=project.Author%></p>
+                    </blockquote>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					 <center><h3>3D Модель</h3></center>
+					 <div class="row border rounded mb-2">
+						Скоро будет
+					 </div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+                    <center><h3>Техническое задание на мебель</h3></center>
+                     <%tasks.forEach((task)=>{%>  
+                        <div class="row border rounded mb-2">
+                            <div class="col-md-2 p-1">
+                                <img class="img-fluid rounded" alt="<%=task.description%>" src="<%=task.imageSrc%>" />
+                            </div>
+                            <div class="col-md-10 p-1">
+                                <h4><b><%=task.name%></b> : <%=task.description%></h4>
+
+                            </div>
+                        </div>
+                    <%})%>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					 <center><h3>Эскизы</h3></center>
+					 <div class="row border rounded mb-2">
+						Скоро будет
+					 </div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+</div>
+</div>
+</div>
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+</body>
+
+</html>

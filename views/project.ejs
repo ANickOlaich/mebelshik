@@ -1,73 +1,93 @@
 <%- include('partials/header'); -%>
 <%- include('partials/top-menu'); -%>
 <div id="app">
-
     <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-8">
-               
-                    <div class="form-group">  
-                        <label>Имя проекта</label>
-                        <input 
-                            type="text" 
-                            class="form-control" 
-                            v-model="project.name"
-                        />
-                    </div>
-                    <div class="form-group">  
-                        <label>Описание проекта</label>
-                        <textarea 
-                            class="form-control" 
-                            rows="3"
-                            v-model="project.description"
-                        ></textarea>
-                    </div>
-                    <div class="form-group">  
-                        <label>Статус проекта</label>
-                        <select 
-                            class="form-select" 
-                            v-model="project.status"
-                            >
-                            <option selected>{{project.status}}</option>
-                            <option>Новый</option>
-                            <option>В работе</option>
-                            <option>В архиве</option>
-                          </select>
-                    </div>
-                    <div class="form-check">
-                        <input 
-                            class="form-check-input" 
-                            type="checkbox" 
-                            value="" 
-                            id="flexCheckDefault"
-                            v-model="project.public"
-                        >
-                        <label class="form-check-label" for="flexCheckDefault">
-                          На главной {{project.public}}
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <Label>Создан: {{project.createdAt}}</Label>
-                    </div>
-                    <div class="form-check">
-                        <Label>Изменен: {{project.updatedAt}}</Label>
-                    </div>
-                    <hr>
-                    <button 
-                    
-                        class="btn btn-primary"
-                        v-on:click="updateProject"
-                    >
-                        Сохранить
-                    </button>
-                
-            </div>
+        <div class="row shadow p-3 mb-2 bg-body rounded">
             <div class="col-md-4">
-                <img alt="Bootstrap Image Preview" src="https://www.layoutit.com/img/sports-q-c-140-140-3.jpg" />
+                <img alt="Bootstrap Image Preview" class="img-fluid" :src="image_url" />
+                <input type="file" @change="uploadImage" />
+            </div>
+           
+            <div class="col-md-8">
+                <h3>{{project.name}}</h3>
+                <div class="form-group mb-2">  
+                    <label>Описание проекта</label>
+                    <textarea 
+                        class="form-control" 
+                        rows="3"
+                        v-model="project.description"
+                    ></textarea>
+                </div>
+                <div class="form-group mb-2">  
+                    <label>Скрытое</label>
+                    <textarea 
+                        class="form-control" 
+                        rows="3"
+                        v-model="project.description"
+                    ></textarea>
+                </div>
+                <div class="form-group mb-2">  
+                    <label>Статус проекта</label>
+                    <select 
+                        class="form-select" 
+                        v-model="project.status"
+                        >
+                        <option selected>{{project.status}}</option>
+                        <option>Новый</option>
+                        <option>В работе</option>
+                        <option>В архиве</option>
+                      </select>
+                </div>
+                <div class="form-check mb-2">
+                    <input 
+                        class="form-check-input" 
+                        type="checkbox" 
+                        value="" 
+                        id="flexCheckDefault"
+                        v-model="project.public"
+                    >
+                    <label class="form-check-label" for="flexCheckDefault">
+                      На главной 
+                    </label>
+                </div>
+                
+                <div class="form-check mb-2">
+                    <Label>Создан: {{project.createdAt}}</Label>
+                </div>
+                <div class="form-check mb-2">
+                    <Label>Изменен: {{project.updatedAt}}</Label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
+                    <div class="btn-group" role="group">
+                        <input type="radio" class="btn-check" value="task" v-model="menu" id="option5">
+                        <label class="btn btn-outline-primary" for="option5">Тех. требования</label>
+                        <input type="radio" class="btn-check" value="image" v-model="menu" id="option6">
+                        <label class="btn btn-outline-primary" for="option6">Эскизы</label>
+                        <input type="radio" class="btn-check" value="model" v-model="menu" id="option7">
+                        <label class="btn btn-outline-primary" for="option7">Модель</label>
+                    </div>
+                    
+                    <div class="btn-group" role="group">
+                        <a class="btn btn-outline-primary" :href="'/view-project/' + this.id" >Смотреть</a>
+                        <a class="btn btn-outline-primary" v-on:click="updateProject">Сохранить</a>
+                        <a class="btn btn-outline-danger" v-on:click="updateProject">В корзину</a> 
+                    </div>
+                </div>
             </div>
         </div>
+        <div v-if="menu=='task'" >
+            <%- include('partials/tasks'); -%>
+        </div>
+        <div v-if="menu=='image'" >
+            <%- include('partials/image'); -%>
+        </div>
+        <div v-if="menu=='model'" >
+            <%- include('partials/model'); -%>
+        </div>
+      
     </div>
-
 </div>
 
 </div>

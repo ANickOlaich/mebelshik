@@ -3,7 +3,7 @@
 <div id="app">
 
 <h1>Мои проекты</h1>
-<div class="shadow p-3 mb-5 bg-body rounded">
+<div class="shadow p-3 mb-2 bg-body rounded">
     <div class="row">
         <div class="col">
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProjectModal">
@@ -56,41 +56,39 @@
     </div>
   </div>
 </div>
-<div class="shadow p-3 mb-5 bg-body rounded">
-    <table class="table">
-    <thead>
-      <tr>
-        <th scope="col">id</th>
-        <th scope="col">Название</th>
-        <th scope="col">Описание</th>
-        <th scope="col">Статус</th>
-        <th scope="col">Создан</th>
-        <th scope="col"></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="project in projects" >
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="row shadow p-3 mb-2 bg-body rounded" v-for="project in projects">
+      <div class="col-md-4">
+        <img :alt="project.name" class="img-fluid" :src="project.image_url" />
+      </div>
+      <div class="col-md-8">
+        <a class="link-offset-2 link-underline link-underline-opacity-0" :href="/project/+project.id"><h3>{{project.name}}</h3></a>
         
-        <th scope="row">{{project.id}}</th>
-        <td>{{project.name}}</td>
-        <td>{{project.description}}</td>
-        <td>{{project.status}}</td>
-        <td>{{project.createdAt}}</td>
-        <td>
-           
-            <div class="btn-group" role="group">
-                <a class="btn btn-outline-primary" :href="/project/+project.id">Редактировать</a>
-                <a class="btn btn-outline-primary" :href="/tasks/+project.id">Задания</a>
-                <a class="btn btn-outline-primary" :href="/tasks/+project.id">Замер</a>
-                <a class="btn btn-outline-primary" :href="/tasks/+project.id">Модель</a>
-			</div>
-        </td>
+        <div class="row">
+          <div class="col-md-2">
+              <p>ID:</p>
+              <p>Описание:</p>
+              <p>Статус</p>
+              <p>Создан</p>
+
+          </div>
+          <div class="col-md-10">
+              <p>{{project.id}}</p>
+              <p>{{project.description}}</p>
+              <p>{{project.status}}</p>
+              <p>{{project.createdAt}}</p>
+          </div>
+        </div>
        
-      </tr>
-     
-    </tbody>
-    </table>
+      </div>
+    </div>
+  </div>
 </div>
+
+
+
 
 </div>
 </div>

@@ -35,6 +35,7 @@ const App={
             const response = await fetch('/api/ral/'+this.ral)       
             const fileURL = await response.json();
             this.task.imageSrc=fileURL.fileURL
+            this.ral = ''
         },
         async newTask(){       //Добавляет новое задание
             console.log(this.task);
@@ -106,6 +107,7 @@ const App={
                         {url:this.parser.url})
             })
             this.task=await response.json();
+            this.parser.url = ''
         },
         
        

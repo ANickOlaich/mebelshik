@@ -1,3 +1,5 @@
+const fs = require('fs');
+const multer = require('multer')
 const router = require('express').Router();
 const taskRouter = require('./task')
 const taskTypes = require('./taskTypes')
@@ -10,6 +12,8 @@ router.use('/task',taskRouter)
 router.use('/task-types',taskTypes)
 router.use('/parser',parserRoutes)
 router.use('/ral',ralRoutes)
+
+
 
 // Все проекты
 router.get('/projects', async (req, res) => {
@@ -81,6 +85,36 @@ router.post('/project', async (req, res) => {
     res.status(500).json(err);
   }
 });
+
+const storage = multer.memoryStorage(); // Используем память для временного хранения файлов
+const upload = multer({ storage: storage });
+
+
+router.post('/project/image', upload.single('image'), async (req, res) => {
+  try {
+    const id = req.body.id;
+    const image = req.file; // Изображение доступно как req.file
+    console.log('ID:', id);
+    console.log('Изображение:', image);
+    // Сгенерируйте уникальное имя файла, например, на основе текущей даты и времени
+    const uniqueFileName = "project_"+id+".jpg"
+
+     // Путь для сохранения файла (поменяйте на путь к вашей директории)
+     const filePath = 'public/project/' + uniqueFileName;
+
+     // Сохраните файл на сервере
+     fs.writeFileSync(filePath, image.buffer);
+ 
+     // Верните адрес сохраненного файла в ответе
+     const fileUrl = `/project/${uniqueFileName}`;
+     res.status(200).json({ 
+      url:fileUrl });
+  } catch (err) {
+    console.error('Ошибка:', err);
+    res.status(500).json(err);
+  }
+});
+
 
 //Меняе статус проекта
 router.post('/projects/status', async(req,res)=>{
