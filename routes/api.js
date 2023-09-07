@@ -2,12 +2,14 @@ const router = require('express').Router();
 const taskRouter = require('./task')
 const taskTypes = require('./taskTypes')
 const parserRoutes = require('./parser')
+const ralRoutes = require('./ral')
 const { User, Project } = require('../models/index');
 const { request } = require('express');
 
 router.use('/task',taskRouter)
 router.use('/task-types',taskTypes)
 router.use('/parser',parserRoutes)
+router.use('/ral',ralRoutes)
 
 // Все проекты
 router.get('/projects', async (req, res) => {

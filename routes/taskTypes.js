@@ -53,21 +53,4 @@ router.put('/', async(req,res)=>{
   }
 })
 
-
-/*
-
-router.put('/project',async(req,res)=>{
-  console.log("PUT PROJECT");
-  console.log(req.body);
-  try {
-    const result = await Project.update(
-      req.body,
-      {where:{id:req.body.id}}
-    )
-  } catch(err){
-    console.log(err);
-    res.status(500).json(err);
-  }
-})
-*/
 module.exports = router;

@@ -142,7 +142,7 @@
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="addURLModalLabel">Новое задание</h5>
+          <h5 class="modal-title" id="addURLModalLabel">Новое тех. требование</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                   </button>
@@ -191,17 +191,8 @@
                     </div>
                     <div class="col-md-12">
                         <div class="collapse" id="collapseExample">
-                            <div class="input-group mb-3">
-                                <label class="input-group-text" for="url">URL</label>
-                                <input 
-                                    type="text" 
-                                    class="form-control" 
-                                    id="url"
-                                    v-model="parser.url"
-                                    placeholder="Введите URL"
-                                >   
-                                <button class="btn btn-outline-secondary" type="button" id="button-addon2" v-on:click="parsing">Загрузить</button>
-                            </div>
+                            
+                           
                             <div class="input-group mb-3">
                                 <label class="input-group-text" for="provider">Поставщик</label>
                                 <input type="text" class="form-control" placeholder="Поставщик" v-model="task.provider" >
@@ -214,6 +205,31 @@
                                 <label class="input-group-text" for="provider">Цена</label>
                                 <input type="text" class="form-control" placeholder="Цена" v-model="task.price" >
                             </div>
+                            <hr>
+                            <div class="input-group mb-3">
+                                <label class="input-group-text" for="url">URL</label>
+                                <input 
+                                    type="text" 
+                                    class="form-control" 
+                                    id="url"
+                                    v-model="parser.url"
+                                    placeholder="Введите URL"
+                                >   
+                                <button class="btn btn-outline-secondary" type="button" id="button-url" v-on:click="parsing">Загрузить</button>
+                            </div>
+                            <div class="input-group mb-3">
+                                <label class="input-group-text" for="ral">RAL</label>
+                                <input 
+                                    type="text" 
+                                    class="form-control" 
+                                    id="ral"
+                                    v-model="ral"
+                                    placeholder="Введите код цвета по RAL"
+                                >   
+                                <button class="btn btn-outline-secondary" type="button" v-on:click="imageRAL">Загрузить</button>
+                            </div>
+                           
+                            
                         </div> 
                     </div>
                 </div>

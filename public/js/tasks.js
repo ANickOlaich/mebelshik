@@ -25,9 +25,17 @@ const App={
             id:0,
             viewDeleted:false,
             viewExtendet:false,
+            ral:''
         }
     },
     methods:{   //Методы приложения
+        async imageRAL(){    
+            console.log('RAL');
+            console.log(this.ral);
+            const response = await fetch('/api/ral/'+this.ral)       
+            const fileURL = await response.json();
+            this.task.imageSrc=fileURL.fileURL
+        },
         async newTask(){       //Добавляет новое задание
             console.log(this.task);
             if (this.task.name==''){
@@ -98,38 +106,9 @@ const App={
                         {url:this.parser.url})
             })
             this.task=await response.json();
-        }
-        /*
-        async inArchive(id){
-            const response = await fetch('/api/projects/status',{
-                method:"POST",
-                headers: {
-                    'Content-Type': 'application/json;charset=utf-8'
-                  },
-                  body: JSON.stringify({
-                    id:id,
-                    status:"В архиве"})
-            })
-            const result = await response.json();
-            console.log(result);
-            this.projects.splice(id-1,1)
-            this.projects.push(result)
-
         },
-        removeNote(idx){
-            this.notes.splice(idx,1)
-
-        }
-    },
-    computed:{  //Вычисляемые данные приложения
-        doubleCountComputed(){
-            return this.notes.length*2
-        }
-    },
-    watch:{     //отслеживать данные
-        inputValue(value){
-            console.log(value);
-        }*/
+        
+       
     },
     computed:{
         sortedTasks(){
