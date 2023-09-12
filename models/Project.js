@@ -1,6 +1,6 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/connection');
-
+// База данных проектов
 class Project extends Model {}
 
 Project.init(
