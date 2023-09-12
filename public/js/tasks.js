@@ -61,8 +61,7 @@ const App={
             }
         },
         async changeStatus(id){
-            const checked = !this.tasks[id].checked
-            console.log("STATUS "+id);       
+            const checked = !this.tasks[id].checked                 
             const response = await fetch('/api/task/status',{
                 method:"POST",
                     headers: {
@@ -70,9 +69,28 @@ const App={
                       },
                       body: JSON.stringify(
                         {id:this.tasks[id].id,
-                        checked:checked})
+                        checked:checked,
+                        public:this.tasks[id].public
+                    })
             })
             this.tasks[id].checked = checked
+            //const data = await response.json();
+        },
+        async changePublic(id){
+            console.log('PUBLIC');
+            const public = !this.tasks[id].public
+            const response = await fetch('/api/task/status',{
+                method:"POST",
+                    headers: {
+                        'Content-Type': 'application/json;charset=utf-8'
+                      },
+                      body: JSON.stringify(
+                        {id:this.tasks[id].id,
+                        checked:this.tasks[id].checked,
+                        public:public})
+            })
+            this.tasks[id].public = public
+            console.log(this.tasks[id].public);
             //const data = await response.json();
         },
         async deleteTask(id){

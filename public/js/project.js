@@ -30,42 +30,61 @@ const App={
             },   
             viewDeleted:false,
             viewExtendet:true,
-            ral:''     
+            ral:'',
+            gallery:[],
+            newImage:{
+                description:'',
+                image_url:'',
+                project_id:0,
+                author_id:0,
+                imaget_type:0,
+                public:false,
+                is_trash:false,
+            },
+            imageTypes:[],
+            file:{}
         }
     },
     methods:{   //Методы приложения
         async uploadImage(event) {
-            const file = event.target.files[0];
-            const id = 1; // Здесь установите значение id по вашим требованиям
-          
-            if (file) {
-              const formData = new FormData();
-              formData.append('id', id); // Добавляем id в formData
-              formData.append('image', file);
-          
-              try {
-                const response = await fetch('/api/project/image', {
-                  method: 'POST',
-                  body: formData,
-                });
-          
-                if (response.ok) {
-                  const responseData = await response.json();
-                  console.log('Сервер ответил:', responseData);
-                  this.project.image_url = responseData.url
-                  console.log(this.project);
-                } else {
-                  console.error('Ошибка при загрузке изображения:', response.statusText);
-                }
-              } catch (error) {
-                console.error('Ошибка при выполнении запроса:', error);
+            console.log(event.target.id);
+            this.file = event.target.files[0];
+            const id = this.id; // Здесь установите значение id по вашим требованиям
+            if (this.file) {
+              
+              if (event.target.id=='eskiz'){
+                this.newImage.image_url = URL.createObjectURL(this.file);
+              } else if (event.target.id=='image'){
+                this.image_url = URL.createObjectURL(this.file);
               }
-          
-              this.image_url = URL.createObjectURL(file);
             }
           },
         async updateProject(){
             console.log("UpdateProject");
+            console.log(this.file);
+            if (this.file) {
+                const formData = new FormData();
+                formData.append('id', this.id); // Добавляем id в formData
+                formData.append('image', this.file);
+            
+                try {
+                  const response = await fetch('/api/project/image', {
+                    method: 'POST',
+                    body: formData,
+                  });
+            
+                  if (response.ok) {
+                    const responseData = await response.json();
+                    console.log('Сервер ответил:', responseData);
+                    this.project.image_url = responseData.url
+                    console.log(this.project);
+                  } else {
+                    console.error('Ошибка при загрузке изображения:', response.statusText);
+                  }
+                } catch (error) {
+                  console.error('Ошибка при выполнении запроса:', error);
+                }
+              }
             const response = await fetch('/api/project',{
                 method:"PUT",
                 headers: {
@@ -106,8 +125,7 @@ const App={
             }
         },
         async changeStatus(id){
-            const checked = !this.tasks[id].checked
-            console.log("STATUS "+id);       
+            const checked = !this.tasks[id].checked                 
             const response = await fetch('/api/task/status',{
                 method:"POST",
                     headers: {
@@ -115,9 +133,28 @@ const App={
                       },
                       body: JSON.stringify(
                         {id:this.tasks[id].id,
-                        checked:checked})
+                        checked:checked,
+                        public:this.tasks[id].public
+                    })
             })
             this.tasks[id].checked = checked
+            //const data = await response.json();
+        },
+        async changePublic(id){
+            console.log('PUBLIC');
+            const public = !this.tasks[id].public
+            const response = await fetch('/api/task/status',{
+                method:"POST",
+                    headers: {
+                        'Content-Type': 'application/json;charset=utf-8'
+                      },
+                      body: JSON.stringify(
+                        {id:this.tasks[id].id,
+                        checked:this.tasks[id].checked,
+                        public:public})
+            })
+            this.tasks[id].public = public
+            console.log(this.tasks[id].public);
             //const data = await response.json();
         },
         async deleteTask(id){
@@ -178,21 +215,15 @@ const App={
             });
             this.project = await response.json();
             this.image_url = this.project.image_url
-        } catch (error) {
-            console.error(error);
-        }
-        try {
-            const response = await fetch('/api/task/'+this.id);
-            this.tasks = await response.json();
-        } catch (error) {
-            console.error(error);
-        }
-        try {
+            const tasks = await fetch('/api/task/'+this.id);
+            this.tasks = await tasks.json();
             const typeTaskRes = await fetch('/api//task-types')
             this.taskType = await typeTaskRes.json();
-        } catch (err){
-            console.log(err);
-        }       
+            const imageTypes = await fetch('/api/image-types')
+            this.imageTypes = await imageTypes.json()
+        } catch (error) {
+            console.error(error);
+        }
     },
 }
 

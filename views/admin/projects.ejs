@@ -1,7 +1,48 @@
 <%- include('partials/head'); -%>
 <%- include('partials/top-menu'); -%>      
 <%- include('partials/left-menu'); -%> 
-                    
-                        <h3>Проекты</h3>
+
+<div class="row shadow p-2 m-1 bg-body-tertiary rounded">
+    <div class="row">
+        <div class="col">  
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTaskModal">
+                 Добавить
+            </button>    
+        </div>
+        
+    </div>
+</div>
+
+<div class="row shadow p-2 m-1 bg-body-tertiary rounded" v-for="(t,idx) in projects">
+  <div class="col-md-4">
+    <img :alt="t.name" class="img-fluid" :src="t.image_url" />
+  </div>
+  <div class="col-md-8">
+    <h3>{{t.name}}</h3>
+    <p>{{t.description}}</p>
+    <div class="row">
+      <div class="col-md-4">
+        <p>Автор:</p>
+        <p>Актуальность:</p>
+        <p>На главной:</p>
+        <p>Статус:</p>
+        <p>Создан:</p>
+        <p>Обновлен:</p>
+      </div>
+      <div class="col-md-6">
+        <p>{{t.author_id}}</p>
+        <p>{{t.is_actual}}</p>
+        <p>{{t.public}}</p>
+        <p>{{t.status}}</p>
+        <p>{{t.createdAt}}</p>
+        <p>{{t.updatedAt}}</p>
+      </div>
+      <div class="col-md-2">
+        <button class="btn btn-success" v-on:click="changeTypeTask(idx)">Редактировать</button>
+        <button class="btn btn-danger" v-on:click="deleteTypeTask(idx)">Удалить</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <%- include('partials/footer'); -%> 

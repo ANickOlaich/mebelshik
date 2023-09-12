@@ -112,8 +112,8 @@ router.get('/', async (req, res) => {
     const tasks = await Task.findAll({
       where:{
         project_id:id,
-        //public:true,
-        //deleted:false,
+        public:true,
+        deleted:false,
         //visible_for_customer:true
       }
     })

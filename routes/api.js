@@ -5,6 +5,8 @@ const taskRouter = require('./task')
 const taskTypes = require('./taskTypes')
 const parserRoutes = require('./parser')
 const ralRoutes = require('./ral')
+const imageTypesRoutes = require('./imageTypes')
+const galleryRoutes = require('./gallery')
 const { User, Project } = require('../models/index');
 const { request } = require('express');
 
@@ -12,7 +14,8 @@ router.use('/task',taskRouter)
 router.use('/task-types',taskTypes)
 router.use('/parser',parserRoutes)
 router.use('/ral',ralRoutes)
-
+router.use('/image-types',imageTypesRoutes)
+router.use('/gallery',galleryRoutes)
 
 
 // Все проекты

@@ -37,12 +37,12 @@ scene.add( cube );*/
 
 const mtlLoader = new MTLLoader();
 
-mtlLoader.load("models/test4.obj.mtl", function(materials)
+mtlLoader.load("models/test5.obj.mtl", function(materials)
 {
     materials.preload();
     var objLoader = new OBJLoader();
     objLoader.setMaterials(materials);
-    objLoader.load("models/test4.obj", function(object)
+    objLoader.load("models/test5.obj", function(object)
     {    
         
         scene.add(object);

@@ -46,10 +46,12 @@ router.get('/:id', async (req, res) => {
 router.post('/status', async(req,res)=>{
   const id=req.body.id
   const checked=req.body.checked
-  console.log('STATUS '+id);
+  const public=req.body.public
+  console.log('STATUS '+id)
   try{
       const response=await Task.update(
-          {checked:checked},
+          {checked:checked,
+          public:public},
           {where:{id:id}}
       )
       res.status(200).json(response);

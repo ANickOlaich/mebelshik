@@ -2,6 +2,8 @@ const User = require("./User");
 const Project = require("./Project")
 const TaskType = require("./TaskType")
 const Task = require("./Task")
+const Gallery = require("./Gallery")
+const ImageType = require("./ImageType")
 
 
 // Определение отношения "один ко многим" между проектами и задачами
@@ -32,4 +34,5 @@ Task.belongsTo(TaskType, {
 
 
 
-module.exports = {User, Project, Task, TaskType};
+
+module.exports = {User, Project, Task, TaskType, Gallery, ImageType};

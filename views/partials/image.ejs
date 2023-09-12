@@ -1,1 +1,124 @@
-Скоро будет
+<div class="row shadow p-3 mb-2 bg-body rounded">
+    <div class="row">
+        <div class="col">  
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addURLModal">
+                 Добавить
+            </button>    
+        </div>
+        
+        <div class="col">
+            <div class="form-check">
+                <input 
+                    class="form-check-input" 
+                    type="checkbox" 
+                    id="flexCheckDefault"
+                    v-model="viewDeleted"
+                >
+                <label class="form-check-label" for="flexCheckDefault">
+                  Показывать удаленные
+                </label>
+            </div>                              
+        </div>
+        <div class="col">
+            <strong>Общее количество:{{tasks.length}}</strong>
+        </div>
+    </div>
+</div>
+
+<div class="row shadow p-3 mb-2 bg-body rounded" v-if="viewExtendet">
+    <div class="col-md-12" >
+        <div v-for="(t,idx) in gallery">
+        <div class="row border-bottom p-2 " v-if="t.trash||viewDeleted">
+           
+            <div class="col-md-2">
+                <img class="img-fluid" :alt="t.description" :src="t.imageSrc" />
+            </div>
+            <div class="col-md-5">
+                <dl>
+                    <dd>
+                        {{t.taskType}}
+                    </dd>
+                    <dd>
+                        {{t.name}}
+                    </dd>
+                    <dt>
+                        {{t.description}}
+                    </dt> 
+                    <dd>
+                        <a :href="t.url">{{t.url}}</a>
+                        
+                    </dd>
+                </dl>
+            </div>
+            <div class="col-md-3">
+                <p>Автор: {{t.user.name}}</p>
+                <p>Создано: {{t.createdAt}}</p>
+                <p>Id: {{t.id}}</p>
+                
+            </div>
+            <div class="col-md-2">
+                <div class="btn-group-vertical" role="group">  
+                    <button v-if="t.public" class="btn btn-success" v-on:click="changePublic(idx)">Видимое</button>
+                    <button v-else class="btn btn-outline-secondary" v-on:click="changePublic(idx)">Скрытое</button>  
+                    <button v-if="t.checked" class="btn btn-success" v-on:click="changeStatus(idx)">Выполнено</button>
+                    <button v-else class="btn btn-outline-secondary" v-on:click="changeStatus(idx)">Новое</button>  
+                    <button class="btn btn-outline-secondary" v-on:click="change(idx)">Изменить</button>
+                    <button class="btn btn-outline-danger" v-on:click="deleteTask(idx)">В корзину</button>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal URL -->
+<div class="modal fade" id="addURLModal" tabindex="-1" aria-labelledby="addURLModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="addURLModalLabel">Новое тех. требование</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+            </div>
+            <div class="modal-body ">
+                    <div class="row">
+                        <div class="mb-3">   
+                            <img alt="Bootstrap Image Preview" class="img-fluid" :src="newImage.image_url" />
+                        </div>
+                        <div class="mb-3">
+                            
+                            <input 
+                                type="file" 
+                                @change="uploadImage" 
+                                id="eskiz"
+                            />
+                        </div>
+                        <div class="input-group mb-3 ps-3">
+                            <label for="description" class="input-group-text">Описание</label>
+                            <textarea 
+                                class="form-control" 
+                                id="description"
+                                v-model="task.description"
+                            ></textarea>
+                        </div>
+                        <div class="input-group mb-3 ps-3">
+                            <label class="input-group-text" for="task_type">Тип</label>
+                            <select 
+                                v-model="task.task_type_id" 
+                                class="form-select"
+                                id="task_type"
+                            >
+                                <option v-for="t in imageTypes" v-bind:value="t.id">{{t.name}}</option>
+                            </select>
+                        </div>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-primary" v-on:click="newTask">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>

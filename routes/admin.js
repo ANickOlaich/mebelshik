@@ -52,6 +52,22 @@ router.get('/task-type',async(req,res)=>{
       active: 'task-type'})
 })
 
+router.get('/image-type',async(req,res)=>{
+  res.render('admin/imageType',{
+      logged_in: req.session.logged_in,
+      is_admin: req.session.is_admin,
+      title: 'Типы эскизов', 
+      active: 'image-type'})
+})
+
+router.get('/gallery',async(req,res)=>{
+  res.render('admin/gallery',{
+      logged_in: req.session.logged_in,
+      is_admin: req.session.is_admin,
+      title: 'Галлерея', 
+      active: 'gallery'})
+})
+
 router.get('/user/:id',async(req,res)=>{
   const userData = await User.findOne({
     where: {

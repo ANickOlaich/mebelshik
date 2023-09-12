@@ -72,12 +72,12 @@
     <div class="row shadow p-3 mb-2 bg-body rounded" v-if="viewExtendet">
         <div class="col-md-12" >
             <div v-for="(t,idx) in sortedTasks">
-            <div class="row " v-if="!t.deleted||viewDeleted">
+            <div class="row border-bottom p-2 " v-if="!t.deleted||viewDeleted">
                
                 <div class="col-md-2">
                     <img class="img-fluid" :alt="t.description" :src="t.imageSrc" />
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-5">
                     <dl>
                         <dd>
                             {{t.taskType}}
@@ -100,12 +100,14 @@
                     <p>Id: {{t.id}}</p>
                     
                 </div>
-                <div class="col-md-3">
-                    <div class="btn-group btn-group" role="group">  
+                <div class="col-md-2">
+                    <div class="btn-group-vertical" role="group">  
+                        <button v-if="t.public" class="btn btn-success" v-on:click="changePublic(idx)">Видимое</button>
+                        <button v-else class="btn btn-outline-secondary" v-on:click="changePublic(idx)">Скрытое</button>  
                         <button v-if="t.checked" class="btn btn-success" v-on:click="changeStatus(idx)">Выполнено</button>
-                        <button v-else class="btn btn-warning" v-on:click="changeStatus(idx)">Новое</button>  
+                        <button v-else class="btn btn-outline-secondary" v-on:click="changeStatus(idx)">Новое</button>  
                         <button class="btn btn-outline-secondary" v-on:click="change(idx)">Изменить</button>
-                        <button class="btn btn-outline-danger" v-on:click="deleteTask(idx)">Удалить</button>
+                        <button class="btn btn-outline-danger" v-on:click="deleteTask(idx)">В корзину</button>
                     </div>
                 </div>
             </div>
