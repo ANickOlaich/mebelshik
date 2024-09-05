@@ -90,6 +90,27 @@ exports.getProjectById = async (req, res) => {
   }
 };
 
+exports.getProjectByIdforAll = async (req, res) => {
+  
+  try {
+    const project = await Project.findOne({
+      where: {
+        id: req.params.id,
+      },
+      include: [
+        { model: User, 
+          attributes: ['name'],
+          as: 'Creator', // Используем псевдоним из ассоциации
+        }] // Загрузка имени пользователя
+    });
+    if (!project) return res.status(404).json({ message: 'Project not found' });
+    return project;
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 // Создать новый проект
 exports.createProject = async (req, res) => {
   const userId = req.user.id; // Предполагается, что пользователь сохраняется в req.user

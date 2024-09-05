@@ -1,8 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const {
-    getProjectById,
-    getUserProjects
+    getProjectByIdforAll
   } = require('../controllers/projectController');
 
   const {
@@ -30,7 +29,7 @@ const {
 // Страница проекта
 router.get('/:id', async (req,res)=>{
   try {
-  const project = await getProjectById(req,res);
+  const project = await getProjectByIdforAll(req,res);
 
   req.params.projectId = project.id;
   const todos = await getTodosByProject(req,res);

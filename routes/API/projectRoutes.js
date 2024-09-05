@@ -12,7 +12,7 @@ const {
   getProjectsPaginated,
   updateProjectStatus,
   updateProjectisTemplate,
-  createProjectTemplated
+  createProjectTemplated,
 } = require('../../controllers/projectController');
 
 const {

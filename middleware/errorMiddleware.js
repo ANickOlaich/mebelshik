@@ -1,5 +1,5 @@
 module.exports = (err, req, res, next) => {
     console.error(err.stack);
-    res.status(500).send('Что-то пошло не так!');
+    res.status(500).send('Что-то пошло не так!'+err.stack);
   };
   
