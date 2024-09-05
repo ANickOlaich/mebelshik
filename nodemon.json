@@ -1,0 +1,7 @@
+{
+    "watch": ["server.js", "config", "controllers", "models", "routes", "middleware"],
+    "ext": "js",
+    "ignore": ["node_modules"],
+    "exec": "node server.js"
+  }
+  
