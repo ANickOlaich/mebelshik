@@ -1,0 +1,504 @@
+<main class="container-fluid mt-4 content">
+    <div class="row mt-4">
+        <div class="col-12">
+            <% if (projectMaterials && projectMaterials.length > 0) { %>
+                <div class="d-flex flex-wrap">
+                    <div class="row w-100">
+                        <div class="col-1">
+                            Назва
+                        </div>
+                        <div class="col-1">
+                            Текстура
+                        </div>
+                        <div class="col-3">
+                            Матеріал
+                        </div>
+                        <div class="col-3">
+                            Примітки
+                         </div>
+                        <div class="col-1">
+                           Постачальник
+                        </div>
+                        <div class="col-1">
+                            Артікул
+                         </div>
+                         <div class="col-1">
+                         </div>
+                         <div class="col-1">
+                        </div>
+                    </div>
+                    <% projectMaterials.forEach(function(material) { %>
+                       
+                        <div class="row project-item mb-2 p-2 w-100" id="mat_<%= material.id %>" style="background-color: #f5f5f5;">
+                          
+                        
+
+                            <!-- Название материала -->
+                            <div class="col-1">
+                                <%= material.name %>
+                            </div>
+                            <!-- Изображение материала -->
+                            <div class="col-1">
+                                <!-- Убедитесь, что в базу данных сохранен URL изображения -->
+                                <% if (material.Material.image && (material.Material.image.endsWith('.jpg') || material.Material.image.endsWith('.png'))) { %>
+                                    <a href="<%= material.Material.image %>" target="_blank">
+                                        <img src="<%= material.Material.image %>" alt="Image" style="max-width: 100px;">
+                                    </a>
+                                <% } else { %>
+                                    <img src="/path/to/placeholder.jpg" alt="Placeholder" style="max-width: 100px;">
+                                <% } %>
+                            </div>
+                            <!-- Название материала из связанной модели -->
+                            <div class="col-3">
+                                <!-- Ссылка активная, открывается в новой вкладке -->
+                                <a href="<%= material.Material.link %>" target="_blank">
+                                    <%= material.Material.name %>
+                                </a>
+                               
+                            </div>
+                            <div class="col-3">
+                                <%= material.note %>
+                            </div>
+                            <!-- Поставщик материала -->
+                            <div class="col-1">
+                                <%= material.Material.supplier %>
+                            </div>
+                            <!-- Артикул материала -->
+                            <div class="col-1">
+                                <%= material.Material.articleNumber %>
+                            </div>
+                            <div class="col-1">
+                                <a href="#" class="btn btn-danger btn-sm" onclick="changeMaterial(<%= material.Material.id %>, '<%= material.name %>','<%= material.id %>')">Изменить</a>
+
+                            </div>
+                            <div class="col-1">
+                                <a href="#" class="btn btn-danger btn-sm" onclick="deleteMaterial(<%= material.id %>)">Удалить</a>
+                            </div>
+                        </div>
+                        
+                    <% }) %>
+                </div>
+            <% } else { %>
+                <p>Нема матеріалів для відображення.</p>
+            <% } %>
+        </div>
+    </div>
+
+   
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <form id="add-material-form">
+                <div class="input-group mb-3">
+                    <!-- Поле для ввода Назва с автозаполнением -->
+                    <input type="text" class="form-control" placeholder="Назва" aria-label="Name" aria-describedby="add-material-form" id="materialChoiceName" name="materialChoiceName" list="materials-choice-list" required>
+                    <datalist id="materials-choice-list">
+                        <% projectMaterialsNames.forEach(function(name) { %>
+                            <option value="<%= name %>"><%= name %></option>
+                        <% }); %>
+                    </datalist>
+                </div>
+    
+                <div class="input-group mb-3">
+                    <!-- Поле для ввода Матеріал с автозаполнением -->
+                    <input type="text" class="form-control" placeholder="Матеріал" aria-label="Material" aria-describedby="add-material-form" id="materialName" name="materialName" list="materials-names-list" required>
+                    <datalist id="materials-names-list">
+                        <% materialNames.forEach(function(name) { %>
+                            <option value="<%= name %>"><%= name %></option>
+                        <% }); %>
+                    </datalist>
+                    <!-- Кнопка для поиска -->
+                    <button class="btn btn-outline-secondary" type="button" id="search-material-button">Додати</button>
+                </div>
+    
+                <!-- Скрытое поле для Id -->
+                <input type="hidden" id="material-id" name="material-id">
+                <input type="hidden" id="choice-material-id" name="choice-material-id" value="0">
+    
+                <div class="row">
+                    <!-- Левая колонка -->
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label for="material-note" class="form-label">Примітка</label>
+                            <textarea class="form-control" id="material-note" rows="3"></textarea>
+                          </div>
+                        <!-- Поле для отображения ссылки -->
+                        <div class="form-group mb-3">
+                            <label for="material-link">Посилання:</label>
+                            <a href="#" target="_blank" id="material-link" class="form-control" readonly></a>
+                        </div>
+    
+                        <!-- Поле для отображения поставщика -->
+                        <div class="form-group mb-3">
+                            <label for="material-supplier">Постачальник:</label>
+                            <input type="text" class="form-control" id="material-supplier" name="material-supplier" readonly>
+                        </div>
+    
+                        <!-- Поле для отображения артикула -->
+                        <div class="form-group mb-3">
+                            <label for="material-article">Артикул:</label>
+                            <input type="text" class="form-control" id="material-article" name="material-article" readonly>
+                        </div>
+                    </div>
+    
+                    <!-- Правая колонка -->
+                    <div class="col-md-6">
+                        <!-- Поле для отображения картинки -->
+                        <div class="form-group mb-3">
+                            <img id="material-image" class="img-fluid" src="" >
+                        </div>
+                    </div>
+                </div>
+    
+                <!-- Кнопка для добавления -->
+                <button class="btn btn-outline-secondary" id="add-project-material-button" type="submit" disabled>Додати</button>
+            </form>
+        </div>
+    </div>
+    
+    
+</main>
+
+<!-- Модальное окно -->
+<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="searchModalLabel">Додавання матеріалу</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="search-material-form">
+            <div class="mb-3">
+              <label for="material-url" class="form-label">URL сторінки:</label>
+              <input type="text" class="form-control" id="material-url" name="url" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Пошук</button>
+          </form>
+          <div id="material-details" class="mt-3" >
+            <div class="mb-3">
+                <label for="material-name" class="form-label">Назва:</label>
+                <input type="text" class="form-control" id="material-name">
+            </div>  
+            <div class="mb-3">
+                <label for="supplier" class="form-label">Постачальник:</label>
+                <input type="text" class="form-control" id="supplier">
+            </div>       
+            <div class="mb-3">
+                <label for="article-number" class="form-label">Артикул:</label>
+                <input type="text" class="form-control" id="article-number">
+            </div> 
+            <div class="mb-3">
+                <img id="image-url" src="" alt="Material Image" style="max-width: 100%;">
+            </div>         
+          </div>
+        </div>
+        <div class="modal-footer">
+            
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрити</button>
+          <button type="button" class="btn btn-primary" id="add-material-btn">Додати</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  
+<script>
+    console.log('====================');
+    console.log('<%= projectMaterials %>');
+    document.addEventListener('DOMContentLoaded', function () {
+    const materialNameInput = document.getElementById('materialName');
+    const addButton = document.getElementById('add-project-material-button');
+    const searchButton = document.getElementById('search-material-button');
+
+    // Обработчик ввода в поле "Назва"
+    materialNameInput.addEventListener('input', async function () {
+        const materialName = materialNameInput.value.trim();
+
+        if (materialName) {
+            // Выполняем проверку на наличие материала в базе
+            try {
+                const response = await fetch(`/api/materials/check?name=${encodeURIComponent(materialName)}`);
+                const data = await response.json();
+
+                if (data.exists) {
+                   // Заполнение полей данными
+
+                        document.getElementById('material-id').value = data.material.id;
+                        const linkElement = document.getElementById('material-link');
+                        linkElement.textContent = data.material.link;
+                        linkElement.href = data.material.link;
+                        document.getElementById('material-supplier').value = data.material.supplier;
+                        document.getElementById('material-article').value = data.material.articleNumber;
+                        document.getElementById('material-image').src = data.material.image;
+                    addButton.disabled = false;
+                } else {
+                    // Если материал не существует, деактивируем кнопку
+                    addButton.disabled = true;
+                }
+            } catch (error) {
+                console.error('Ошибка при проверке материала:', error);
+                addButton.disabled = true;
+            }
+        } else {
+            addButton.disabled = true;
+        }
+    });
+
+    // Обработчик нажатия кнопки "Пошук"
+    searchButton.addEventListener('click', function () {
+        // Открываем модальное окно
+        const searchModal = new bootstrap.Modal(document.getElementById('searchModal'));
+        searchModal.show();
+    });
+
+    
+
+
+});
+
+// Обработчик нажатия кнопки "Додати" Добавляет или изменяет материалы
+document.getElementById('add-project-material-button').addEventListener('click', async function (event) {
+    event.preventDefault();
+    console.log('-------------------------------');
+    const matId = document.getElementById("choice-material-id").value;
+    console.log('matId='+matId);
+    if (matId == "0"){      //Если добавляется материал
+        // Создание объекта с данными для отправки на сервер
+        const materialData = {
+            name: document.getElementById('materialChoiceName').value.trim(),
+            projectId: '<%= project.id %>', // Подстановка ID проекта из серверного рендеринга
+            materialId: document.getElementById('material-id').value.trim(),
+            note: document.getElementById('material-note').value.trim(),
+        };
+
+        console.log('Данные материала для добавления:', materialData);
+
+        // Отправка данных на сервер
+        try {
+            const response = await fetch('/api/project-materials', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(materialData)
+            });
+
+            if (response.ok) {
+                window.location.reload(); // Перезагружаем страницу, чтобы увидеть новый материал
+            } else {
+                const errorData = await response.json();
+                alert(`Ошибка: ${errorData.message}`);
+            }
+        } catch (error) {
+            console.error('Ошибка при добавлении материала:', error);
+            alert('Ошибка при добавлении материала. Проверьте консоль для получения подробностей.');
+        }
+    }else{      //Если изменяется материал
+        const materialData = {
+            id:matId,
+            materialId: document.getElementById('material-id').value.trim(),
+            note: document.getElementById('material-note').value.trim(),
+        };
+         // Отправка данных на сервер
+         try {
+            const response = await fetch('/api/project-materials', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(materialData)
+            });
+
+            if (response.ok) {
+                window.location.reload(); // Перезагружаем страницу, чтобы увидеть новый материал
+            } else {
+                const errorData = await response.json();
+                alert(`Ошибка: ${errorData.message}`);
+            }
+        } catch (error) {
+            console.error('Ошибка при добавлении материала:', error);
+            alert('Ошибка при добавлении материала. Проверьте консоль для получения подробностей.');
+        }
+        document.getElementById("choice-material-id").value = "0";
+    }
+    
+    
+    console.log('-------------------------------');
+    const addButton = document.getElementById('add-project-material-button');
+            addButton.textContent = "Додати"
+            document.getElementById('material-name').disabled = false;
+        document.getElementById('supplier').disabled = false;
+        document.getElementById('article-number').disabled = false;
+            //addButton.style.display = 'none'; // Полностью скрыть кнопку
+    
+           
+            
+});
+
+
+document.getElementById('search-material-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const url = document.getElementById('material-url').value;
+
+    fetch('/api/materials/parse-material', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ url })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.error) {
+        alert('Ошибка при парсинге данных');
+      } else {
+        console.log(data);
+        document.getElementById('material-name').value = data.materialName;
+        document.getElementById('supplier').value = data.supplier;
+        document.getElementById('article-number').value = data.articleNumber;
+        document.getElementById('image-url').src = data.imageUrl;
+        document.getElementById('material-details').style.display = 'block';
+        document.getElementById('material-name').disabled = true;
+        document.getElementById('supplier').disabled = true;
+        document.getElementById('article-number').disabled = true;
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+  });
+
+  document.getElementById('add-material-btn').addEventListener('click', async function() {
+    const materialData = {
+        name: document.getElementById('material-name').value.trim(),
+        supplier: document.getElementById('supplier').value.trim(),
+        articleNumber: document.getElementById('article-number').value.trim(),
+        image: document.getElementById('image-url').src.trim(),
+        link: document.getElementById('material-url').value,
+    };
+
+    // Проверка заполненности всех полей
+    if (!materialData.name || !materialData.supplier || !materialData.articleNumber || !materialData.image) {
+        alert('Пожалуйста, заполните все поля.');
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/materials', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(materialData)
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            console.log('Response data:', data);
+            //location.reload(); // Перезагрузить страницу для обновления данных
+                        document.getElementById('materialName').value = data.name;
+                        document.getElementById('material-id').value = data.id;
+                        const linkElement = document.getElementById('material-link');
+                        linkElement.textContent = data.link;
+                        linkElement.href = data.link;
+                        document.getElementById('material-supplier').value = data.supplier;
+                        document.getElementById('material-article').value = data.articleNumber;
+                        document.getElementById('material-image').src = data.image;
+                        const searchModal = new bootstrap.Modal(document.getElementById('searchModal'));
+                        searchModal.hide();
+                        const addButton = document.getElementById('add-project-material-button');
+                        addButton.disabled = false;
+
+        } else {
+            const errorData = await response.json();
+            alert(`Ошибка при добавлении материала: ${errorData.message}`);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Ошибка при добавлении материала');
+    }
+});
+
+function deleteMaterial(materialId) {
+    if (confirm('Вы уверены, что хотите удалить этот материал?')) {
+        fetch(`/api/project-materials/${materialId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+               
+                window.location.reload(); // Перезагружаем страницу, чтобы обновить список материалов
+            } else {
+                return response.json().then(data => {
+                    alert(`Ошибка: ${data.message}`);
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Ошибка при удалении материала:', error);
+            alert('Ошибка при удалении материала. Проверьте консоль для получения подробностей.');
+        });
+    }
+}
+
+function saveChangeMaterial(materialId){
+
+}
+function changeMaterial(materialId, projectMaterial,id) {
+    const replaceMaterial =  document.getElementById("choice-material-id").value;
+    if (replaceMaterial!="0"){
+        document.getElementById('mat_'+replaceMaterial).style.background = "white";
+    }
+
+    const div = document.getElementById('mat_'+id);
+    div.style.backgroundColor = 'lightblue'; // Изменяет цвет фона на светло-голубой
+    document.getElementById("choice-material-id").value = id;
+    fetch(`/api/materials/${materialId}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            return response.json(); // Здесь мы возвращаем Promise, который содержит данные.
+        } else {
+            return response.json().then(data => {
+                alert(`Ошибка: ${data.message}`);
+            });
+        }
+    })
+    .then(data => {
+        if (data) {
+            console.log(data); // Здесь мы можем использовать данные.
+            document.getElementById('materialChoiceName').value = projectMaterial;
+            document.getElementById('materialName').value = data.name;
+            document.getElementById('material-id').value = data.id;
+            const linkElement = document.getElementById('material-link');
+            linkElement.textContent = data.link;
+            linkElement.href = data.link;
+            document.getElementById('material-supplier').value = data.supplier;
+            document.getElementById('material-article').value = data.articleNumber;
+            document.getElementById('material-image').src = data.image;
+            const addButton = document.getElementById('add-project-material-button');
+            addButton.textContent = "Изменить"
+            //addButton.style.display = 'none'; // Полностью скрыть кнопку
+          
+           
+
+        }
+    })
+    .catch(error => {
+        console.error('Ошибка при редактировании материала:', error);
+    });
+}
+
+
+
+
+
+</script>

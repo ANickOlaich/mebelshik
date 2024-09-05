@@ -1,0 +1,93 @@
+<%- include('partials/header', { title: 'Проект' }) %>
+
+<main class="container-fluid mt-4 content">
+    <h1 class="display-4">Проект <%= project.name %></h1>
+    
+    <div class="row mt-3">
+      <div class="col-md-12">
+        <ul class="nav nav-tabs" id="project-tabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="overview-tab" data-bs-toggle="tab" href="#overview" role="tab" aria-controls="overview" aria-selected="true">Обзор</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="todo-tab" data-bs-toggle="tab" href="#todo" role="tab" aria-controls="todo" aria-selected="false">Зробити</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="size-tab" data-bs-toggle="tab" href="#size" role="tab" aria-controls="size" aria-selected="false">Розміри</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="materials-tab" data-bs-toggle="tab" href="#materials" role="tab" aria-controls="materials" aria-selected="false">Матеріали</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="photo-tab" data-bs-toggle="tab" href="#photo" role="tab" aria-controls="photo" aria-selected="false">Фото</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="settings-tab" data-bs-toggle="tab" href="#settings" role="tab" aria-controls="settings" aria-selected="false">Настройки</a>
+            </li>
+        </ul>
+        <div class="tab-content mt-2" id="project-tabs-content">
+            <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
+                <%- include('projectPartials/overview') %>
+            </div>
+            <div class="tab-pane fade" id="todo" role="tabpanel" aria-labelledby="todo-tab">
+                <%- include('projectPartials/todo') %>
+            </div>
+            <div class="tab-pane fade" id="size" role="tabpanel" aria-labelledby="size-tab">
+                <%- include('projectPartials/size') %>
+            </div>
+            <div class="tab-pane fade" id="materials" role="tabpanel" aria-labelledby="materials-tab">
+                <%- include('projectPartials/materials') %>
+            </div>
+            <div class="tab-pane fade" id="photo" role="tabpanel" aria-labelledby="photo-tab">
+                <%- include('projectPartials/photo') %>
+            </div>
+            <div class="tab-pane fade" id="settings" role="tabpanel" aria-labelledby="settings-tab">
+                <%- include('projectPartials/settings') %>
+            </div>
+        </div>
+    </div>  
+</main>
+
+
+<%- include('partials/footer') %>
+
+// скрипт сохраняет активную вуладку для перезагрузки
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    
+            
+            document.getElementById('materialChoiceName').value = '';
+            document.getElementById('materialName').value = '';
+            document.getElementById('material-id').value = '';
+            const linkElement = document.getElementById('material-link');
+            linkElement.textContent = '';
+            linkElement.href = '';
+            document.getElementById('material-supplier').value = '';
+            document.getElementById('material-article').value = '';
+            document.getElementById('material-image').src = '';
+            document.getElementById('material-name').value = '';
+            document.getElementById('supplier').value = '';
+            document.getElementById('article-number').value = '';
+            document.getElementById('material-url').value = '';
+      // Сохраняем текущую активную вкладку в localStorage при нажатии
+      const tabLinks = document.querySelectorAll('.nav-link');
+      tabLinks.forEach(tabLink => {
+          tabLink.addEventListener('click', function (e) {
+              const activeTabId = e.target.getAttribute('href');
+              localStorage.setItem('activeTab', activeTabId);
+          });
+      });
+
+      // Проверяем localStorage и активируем соответствующую вкладку
+      const activeTab = localStorage.getItem('activeTab');
+      if (activeTab) {
+          const tabToActivate = document.querySelector(`.nav-link[href="${activeTab}"]`);
+          if (tabToActivate) {
+              const bootstrapTab = new bootstrap.Tab(tabToActivate);
+              bootstrapTab.show();
+          }
+      }
+  });
+</script>
+
+

@@ -1,0 +1,150 @@
+<main class="container-fluid mt-4 content">
+    <div class="row mt-4">
+        <div class="col-12">
+            <% if (todos && todos.length > 0) { %>
+                <div class="d-flex flex-wrap">
+                    <div class="row w-100">
+                        <div class="col-4">
+                            Зробити
+                        </div>
+                        <div class="col-2">
+                            Дата
+                        </div>
+                        <div class="col-2">
+                            Автор
+                        </div>
+                      
+                        <div class="col-2">
+                            Статус
+                        </div>
+                        <div class="col-1">
+                            
+                        </div>
+                        <div class="col-1">
+                            
+                        </div>
+                    </div>
+                    <% todos.forEach(function(todo) { %>
+                        <% 
+                            let rowClass = 'bg-light text-dark'; // Определяем класс строки на основе статуса проекта
+                            if (todo.status === 'Готово') {
+                                rowClass = 'bg-success text-white'; // Зеленый для готовых
+                            }
+                        %>
+                        <div class="row <%= rowClass %> project-item mb-2 p-2 w-100">
+                            <div class="col-4">
+                                <%= todo.description %>
+                            </div>
+                            <div class="col-2">
+                                <%= new Date(todo.addedAt).toLocaleDateString('ru-RU') %>
+                            </div>
+                            <div class="col-2">
+                                <%= todo.User ? todo.User.name : 'Неизвестен' %>
+                            </div>
+                            
+                            <div class="col-2">
+                                <%= todo.status %>
+                            </div>
+                            <div class="col-1">
+                                <a href="#" class="btn btn-warning btn-sm" onclick="editTodo(<%= todo.id %>)">Изменить</a>
+                            </div>
+                            <div class="col-1">
+                                <a href="#" class="btn btn-danger btn-sm" onclick="deleteTodo(<%= todo.id %>)">Удалить</a>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+            <% } else { %>
+                <p>Нема завдань для відображення.</p>
+            <% } %>
+        </div>
+    </div>
+
+   
+    <div class="row mt-4">
+        <div class="col-md-12">
+                    <form id="add-todo-form">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="Нове завдання" aria-label="Project Name" aria-describedby="add-todo-form" id="description" name="description" required>
+                            <button class="btn btn-outline-secondary" type="submit" id="add-todo-form">Додати</button>
+                        </div>
+                    </form>
+        </div>
+    </div>
+</main>
+
+<script>
+    document.getElementById('add-todo-form').addEventListener('submit', async function(event) {
+        event.preventDefault();
+    
+        const description = document.getElementById('description').value;
+        const note = '';
+       
+        const projectId = '<%= project.id %>'; // Получаем ID проекта из шаблона
+    
+        try {
+            const response = await fetch(`/api/projects/${projectId}/todos`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ description, note, projectId })
+            });
+    
+            if (response.ok) {
+                window.location.reload(); // Перезагружаем страницу, чтобы увидеть новую задачу
+            } else {
+                const errorData = await response.json();
+                alert(`Ошибка: ${errorData.message}`);
+            }
+        } catch (error) {
+            console.error('Ошибка при добавлении задачи:', error);
+            alert('Ошибка при добавлении задачи');
+        }
+    });
+    
+    async function deleteTodo(todoId) {
+        if (confirm('Вы уверены, что хотите удалить эту задачу?')) {
+            try {
+                const response = await fetch(`/api/todos/${todoId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+    
+                if (response.ok) {
+                    window.location.reload(); // Перезагружаем страницу, чтобы удалить задачу
+                } else {
+                    const errorData = await response.json();
+                    alert(`Ошибка: ${errorData.message}`);
+                }
+            } catch (error) {
+                console.error('Ошибка при удалении задачи:', error);
+                alert('Ошибка при удалении задачи');
+            }
+        }
+    }
+    
+    async function editTodo(todoId) {
+        try {
+            console.log(todoId);
+                const response = await fetch(`/api/todos/${todoId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                console.log(response);
+                if (response.ok) {
+                    window.location.reload(); // Перезагружаем страницу
+                } else {
+                    const errorData = await response.json();
+                    alert(`Ошибка: ${errorData.message}`);
+                }
+            } catch (error) {
+                console.error('Ошибка при изменении задачи:', error);
+                alert('Ошибка при изменении задачи');
+            }
+    }
+    </script>

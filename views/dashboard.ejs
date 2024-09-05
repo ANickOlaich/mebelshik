@@ -1,0 +1,24 @@
+<%- include('partials/header', { title: 'Личный кабинет' }) %>
+
+<main class="container mt-4 content">
+  <h1 class="display-4">Личный кабинет</h1>
+  
+  <div class="card mt-4">
+    <div class="card-body">
+      <h5 class="card-title">Привет, <%= user.name %>!</h5>
+      <p class="card-text">Email: <%= user.email %></p>
+      <p class="card-text">Роль: <%= user.role %></p>
+      <% if (user.logo) { %>
+        <p class="card-text">Аватарка:</p>
+        <img src="<%= user.logo %>" alt="Avatar" class="img-thumbnail" style="width: 150px; height: 150px;">
+      <% } else { %>
+        <p class="card-text">У вас нет аватарки. Загрузите её!</p>
+      <% } %>
+     
+      <a href="/projects" class="btn btn-outline-secondary mt-3">Мої проекти</a>
+      <a href="/api/auth/logout" class="btn btn-danger mt-3">Выйти</a> <!-- Кнопка выхода -->
+    </div>
+  </div>
+</main>
+
+<%- include('partials/footer') %>

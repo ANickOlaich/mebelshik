@@ -1,0 +1,183 @@
+<%- include('partials/header', { title: 'Технічне завдання на проект ' + project.name }) %>
+
+<main class="container-fluid mt-4 content">
+    <h1 class="display-4">Технічне завдання на проект "<%= project.name %>"</h1>
+    <div class="row m-3 ">
+        <!-- Пример информационного блока о проекте -->
+        
+            <div class="card mt-3">
+                <div class="card-body">
+                    <h5 class="card-title">Інформація про проект</h5>
+                    <p class="card-text"><strong>Назва:</strong> <%= project.name %></p>
+                    <p class="card-text"><strong>Опис:</strong> <%= project.description %></p>
+                    <p class="card-text"><strong>Створено:</strong>  <%= new Date(project.createdAt).toLocaleDateString('ru-RU') %></p>
+                    <% console.log(project); %>
+                    <p class="card-text"><strong>Автор:</strong> <%=project.Creator.name %></p>
+
+                </div>
+           
+        </div>
+        
+        <!-- Пример блока с техническими требованиями -->
+       
+            <div class="card mt-3">
+                <div class="card-body">
+                    <h5 class="card-title">Ескізи проекту</h5>
+                    <% photos.forEach(function(photo) { %>
+                        <div class="col-md-4 mb-4">
+                            <div class="card">
+                                <img src="/<%= photo.url %>" class="card-img-top" alt="Фото">
+                                <div class="card-body">
+                                    <p class="card-text"><%= photo.description %></p>
+                                </div>
+                            </div>
+                        </div>
+                    <% }) %>  
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-body">
+                    <h5 class="card-title">Розміри</h5>
+                    <% if (sizes && sizes.length > 0) { %>
+                        <div class="d-flex flex-wrap">
+                            <div class="row w-100">
+                                <div class="col-8">
+                                    Назва
+                                </div>
+                                <div class="col-4">
+                                    Значення
+                                </div>
+                              
+                            </div>
+                            <% sizes.forEach(function(size) { %>
+                               
+                                <div class="row project-item mb-2 p-2 w-100">
+                                    <div class="col-8">
+                                        <%= size.sizeName %>
+                                    </div>
+                                    <div class="col-4">
+                                        <%= size.dimension %>
+                                    </div>
+                                </div>
+                            <% }) %>
+                        </div>
+                    <% } else { %>
+                        <p>Нема розмірів для відображення.</p>
+                    <% } %>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-body">
+                    <h5 class="card-title">Матеріали проекту</h5>
+                    <% if (projectMaterials && projectMaterials.length > 0) { %>
+                        <div class="d-flex flex-wrap">
+                            <div class="row w-100">
+                                <div class="col-1">
+                                    Назва
+                                </div>
+                                <div class="col-2">
+                                    Текстура
+                                </div>
+                                <div class="col-4">
+                                    Матеріал
+                                </div>
+                                <div class="col-3">
+                                    Примітки
+                                 </div>
+                                <div class="col-1">
+                                   Постачальник
+                                </div>
+                                <div class="col-1">
+                                    Артікул
+                                 </div>
+                            </div>
+                            <% projectMaterials.forEach(function(material) { %>
+                               
+                                <div class="row project-item mb-2 p-2 w-100" id="mat_<%= material.id %>">
+        
+                                    <!-- Название материала -->
+                                    <div class="col-1">
+                                        <%= material.name %>
+                                    </div>
+                                    <!-- Изображение материала -->
+                                    <div class="col-2">
+                                        <!-- Убедитесь, что в базу данных сохранен URL изображения -->
+                                        <img src="<%= material.Material.image %>" alt="Изображение материала" class="img-fluid">
+                                    </div>
+                                    <!-- Название материала из связанной модели -->
+                                    <div class="col-4">
+                                        <!-- Ссылка активная, открывается в новой вкладке -->
+                                        <a href="<%= material.Material.link %>" target="_blank">
+                                            <%= material.Material.name %>
+                                        </a>
+                                    </div>
+                                    <div class="col-3">
+                                        <%= material.note %>
+                                    </div>
+                                    <!-- Поставщик материала -->
+                                    <div class="col-1">
+                                        <%= material.Material.supplier %>
+                                    </div>
+                                    <!-- Артикул материала -->
+                                    <div class="col-1">
+                                        <%= material.Material.articleNumber %>
+                                    </div>
+                                   
+                                </div>
+                                
+                            <% }) %>
+                        </div>
+                    <% } else { %>
+                        <p>Нема матеріалів для відображення.</p>
+                    <% } %>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-body">
+                    <h5 class="card-title">Документи проекту</h5>
+                    <% if (todos && todos.length > 0) { %>
+                        <div class="d-flex flex-wrap">
+                            <div class="row w-100">
+                                <div class="col-8">
+                                    Зробити
+                                </div>
+                               
+                               
+                              
+                                <div class="col-4">
+                                    Статус
+                                </div>
+                               
+                            </div>
+                            <% todos.forEach(function(todo) { %>
+                                <% 
+                                    let rowClass = 'bg-light text-dark'; // Определяем класс строки на основе статуса проекта
+                                    if (todo.status === 'Готово') {
+                                        rowClass = 'bg-success text-white'; // Зеленый для готовых
+                                    }
+                                %>
+                                <div class="row <%= rowClass %> project-item mb-2 p-2 w-100">
+                                    <div class="col-8">
+                                        <%= todo.description %>
+                                    </div>
+                                   
+                                    <div class="col-4">
+                                        <%= todo.status %>
+                                    </div>
+                                  
+                                </div>
+                            <% }) %>
+                        </div>
+                    <% } else { %>
+                        <p>Нема завдань для відображення.</p>
+                    <% } %>
+                </div>
+            </div>
+       
+    </div>  
+</main>
+
+<%- include('partials/footer') %>

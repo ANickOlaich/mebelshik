@@ -1,0 +1,184 @@
+<main class="container-fluid mt-4 content">
+    <div class="row mt-4">
+        <div class="col-12">
+            <% if (sizes && sizes.length > 0) { %>
+                <div class="d-flex flex-wrap">
+                    <div class="row w-100">
+                        <div class="col-6">
+                            Назва
+                        </div>
+                        <div class="col-2">
+                            Значення
+                        </div>
+                        <div class="col-2">
+                            Редактировать
+                        </div>
+                        <div class="col-2">
+                            Удалить
+                        </div>
+                    </div>
+                    <% sizes.forEach(function(size) { %>
+                       
+                        <div class="row project-item mb-2 p-2 w-100">
+                            <div class="col-6">
+                                <%= size.sizeName %>
+                            </div>
+                            <div class="col-2">
+                                <%= size.dimension %>
+                            </div>
+                            <div class="col-2">
+                                <a href="#" class="btn btn-warning btn-sm" onclick="editSize(<%= size.id %>)">Изменить</a>
+                            </div>
+                            <div class="col-2">
+                                <a href="#" class="btn btn-danger btn-sm" onclick="deleteSize(<%= size.id %>)">Удалить</a>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+            <% } else { %>
+                <p>Нема розмірів для відображення.</p>
+            <% } %>
+        </div>
+    </div>
+
+   
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <form id="add-size-form">
+                <div class="input-group mb-3">
+                    <!-- Поле для ввода Назва с автозаполнением -->
+                    <input type="text" class="form-control" placeholder="Назва" aria-label="Size" aria-describedby="add-size-form" id="sizeName" name="sizeName" list="size-names-list" required>
+                    <datalist id="size-names-list">
+                        <% sizeNames.forEach(function(name) { %>
+                            <option value="<%= name %>"><%= name %></option>
+                        <% }); %>
+                    </datalist>
+                    
+                    <!-- Поле для ввода Розмір -->
+                    <input type="text" class="form-control" placeholder="Розмір" aria-label="Size" aria-describedby="add-size-form" id="dimension" name="dimension" required>
+                    
+                    <!-- Кнопка для добавления -->
+                    <button class="btn btn-outline-secondary" type="submit" id="add-size-form">Додати</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+
+<!-- Modal для редактирования размера -->
+<div class="modal fade" id="editSizeModal" tabindex="-1" aria-labelledby="editSizeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editSizeModalLabel">Изменить размер</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="edit-size-form">
+                    <div class="mb-3">
+                        <label for="editDimension" class="form-label">Розмір</label>
+                        <input type="text" class="form-control" id="editDimension" name="dimension" required>
+                    </div>
+                    <input type="hidden" id="editSizeId" name="sizeId">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                <button type="button" class="btn btn-primary" id="saveSizeButton">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    document.getElementById('add-size-form').addEventListener('submit', async function(event) {
+        event.preventDefault();
+    
+        const sizeName = document.getElementById('sizeName').value;
+        const dimension = document.getElementById('dimension').value;
+        const projectId = '<%= project.id %>'; // Получаем ID проекта из шаблона
+    
+        try {
+            const response = await fetch(`/api/sizes`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ sizeName, dimension, projectId })
+            });
+    
+            if (response.ok) {
+                window.location.reload(); // Перезагружаем страницу, чтобы увидеть новую задачу
+            } else {
+                const errorData = await response.json();
+                alert(`Ошибка: ${errorData.message}`);
+            }
+        } catch (error) {
+            console.error('Ошибка при добавлении задачи:', error);
+            alert('Ошибка при добавлении задачи');
+        }
+    });
+    
+    async function deleteSize(sizeId) {
+        if (confirm('Вы уверены, что хотите удалить этот размер?')) {
+            try {
+                const response = await fetch(`/api/sizes/${sizeId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+    
+                if (response.ok) {
+                    window.location.reload(); // Перезагружаем страницу, чтобы удалить задачу
+                } else {
+                    const errorData = await response.json();
+                    alert(`Ошибка: ${errorData.message}`);
+                }
+            } catch (error) {
+                console.error('Ошибка при удалении задачи:', error);
+                alert('Ошибка при удалении задачи');
+            }
+        }
+    }
+    function editSize(sizeId) {
+    // Найдите размер по ID (здесь предполагается, что размеры уже загружены на страницу)
+    
+    document.getElementById('editSizeId').value = sizeId;
+    
+    // Откройте модальное окно
+    var editSizeModal = new bootstrap.Modal(document.getElementById('editSizeModal'));
+    editSizeModal.show();
+}
+
+document.getElementById('saveSizeButton').addEventListener('click', function() {
+    const sizeId = document.getElementById('editSizeId').value;
+    const newDimension = document.getElementById('editDimension').value;
+
+    // Отправить запрос на сервер
+    fetch(`/api/sizes/${sizeId}`, {
+        method: 'PUT', // Или 'PATCH' в зависимости от вашего подхода
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ dimension: newDimension })
+    })
+    .then(response => {
+        if (response.ok) {
+            // Закрыть модальное окно и перезагрузить страницу после успешного обновления
+            var editSizeModal = bootstrap.Modal.getInstance(document.getElementById('editSizeModal'));
+            editSizeModal.hide();
+            window.location.reload(); // Перезагрузка страницы
+        } else {
+            // Обработка ошибок, если требуется
+            alert('Ошибка при обновлении размера');
+        }
+    })
+    .catch(error => {
+        console.error('Ошибка:', error);
+    });
+});
+    
+    
+    </script>

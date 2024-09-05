@@ -1,0 +1,163 @@
+<%- include('partials/header', { title: 'Проекты' }) %>
+
+<main class="container mt-4 content">
+    <div class="row">
+        <div class="col-md-12">
+            <h3>
+                Проекти
+            </h3>
+            <div class="project-list">
+				<div class="row">
+					<div class="col-3">
+						ID
+					</div>
+					<div class="col-3">
+						Назва
+					</div>
+					<div class="col-3">
+						Создан
+					</div>
+					<div class="col-3">
+						Статус
+					</div>
+				</div>
+                <% if (projects && projects.length > 0) { %>
+                    <% projects.forEach(function(project) { %>
+                        <% 
+                            let rowClass = 'bg-light text-dark'; // Определяем класс строки на основе статуса проекта
+                            if (project.status === 'Новий') {
+                                rowClass = 'bg-warning text-dark'; // Желтый для новых
+                            } else if (project.status === 'В работе') {
+                                rowClass = 'bg-success text-dark'; // Зеленый в работе
+                            } else if (project.status === 'Завершен') {
+                                rowClass = 'bg-secondary text-white'; // Серый для завершенных
+                            } else if (project.status === 'Шаблон') {
+                                rowClass = 'bg-info text-white'; // Голубой для шаблонов
+                            }
+                        %>
+						<% if (project.status != 'deleted'){ %>
+                        <a href="/projects/<%= project.id %>" class="d-block <%= rowClass %> project-item mb-2 p-2">
+                            <div class="row">
+                                <div class="col-3">
+                                    <%= project.id %>
+                                </div>
+                                <div class="col-3">
+                                    <%= project.name %>
+                                </div>
+                                <div class="col-3">
+                                    <%= new Date(project.createdAt).toLocaleDateString('ru-RU') %>
+                                </div>
+                                <div class="col-3">
+                                    <%= project.status %>
+                                </div>
+                            </div>
+                        </a>
+						<% } %>
+                    <% }) %>
+                <% } else { %>
+                    <p>Проекты не найдены.</p>
+                <% } %>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <form role="form" action="/api/projects" method="POST" id="create-project-form">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="Новый проект" aria-label="Project Name" aria-describedby="button-addon2" id="name" name="name" required>
+                    <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Создать</button>
+                    <button class="btn btn-outline-secondary" type="button" id="template-button" data-bs-toggle="modal" data-bs-target="#templateModal">Из Шаблона</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+
+<%- include('partials/footer') %>
+
+<!-- Модальное окно для выбора шаблона -->
+<div class="modal fade" id="templateModal" tabindex="-1" aria-labelledby="templateModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="templateModalLabel">Выберите шаблон</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <select class="form-select" id="template-select" aria-label="Select template">
+                    <% projects.forEach(function(project) { %>
+                        <% if (project.isTemplate) { %>
+                            <option value="<%= project.id %>"><%= project.name %></option>
+                        <% } %>
+                    <% }); %>
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                <button type="button" id="use-template-button" class="btn btn-primary">Использовать шаблон</button>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+document.getElementById('use-template-button').addEventListener('click', async function () {
+    const selectedTemplateId = document.getElementById('template-select').value;
+    console.log(selectedTemplateId);
+
+    if (selectedTemplateId) {
+        try {
+            const response = await fetch('/api/projects/template', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: document.getElementById('name').value, // Передайте имя проекта, если нужно
+                    templateId: selectedTemplateId
+                })
+            });
+
+            if (response.ok) {
+                alert('Проект успешно создан из шаблона!');
+                window.location.href = '/projects'; // Перенаправление на страницу списка проектов
+            } else {
+                const errorData = await response.json();
+                alert(`Ошибка: ${errorData.message}`);
+            }
+        } catch (error) {
+            console.error('Ошибка при создании проекта из шаблона:', error);
+            alert('Ошибка при создании проекта. Проверьте консоль для получения подробностей.');
+        }
+    } else {
+        alert('Пожалуйста, выберите шаблон');
+    }
+    
+});
+
+
+</script>
+
+<!-- Дополнительный CSS -->
+<style>
+    .project-item {
+        text-decoration: none; /* Убираем подчеркивание текста */
+        transition: background-color 0.3s, transform 0.3s; /* Добавляем плавный переход для эффекта наведения */
+    }
+
+    .project-item:hover {
+        background-color: #007bff; /* Меняем цвет фона при наведении курсора */
+        color: #fff; /* Меняем цвет текста при наведении курсора */
+        transform: scale(1.02); /* Небольшое увеличение при наведении */
+    }
+
+    .project-item div {
+        text-decoration: none; /* Убираем подчеркивание текста для вложенных div */
+    }
+</style>
+
+
+

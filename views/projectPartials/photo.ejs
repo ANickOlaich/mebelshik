@@ -1,0 +1,146 @@
+<div class="row mt-3" >
+    <h1>Photo Gallery</h1>
+    
+    <!-- Button to trigger modal -->
+   
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPhotoModal">
+        Добавить Фото
+      </button>
+      
+
+      <div class="row mt-3" id="gallery">
+        <% photos.forEach(function(photo) { %>
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="/<%= photo.url %>" class="card-img-top" alt="Фото">
+                    <div class="card-body">
+                        <p class="card-text"><%= photo.description %></p>
+                        <button class="btn btn-danger btn-sm delete-photo" data-id="<%= photo.id %>">Удалить</button>
+                    </div>
+                </div>
+            </div>
+        <% }) %>
+    </div>
+    
+</div>
+
+<!-- Modal for adding photo -->
+<div class="modal fade" id="addPhotoModal" tabindex="-1" role="dialog" aria-labelledby="addPhotoModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addPhotoModalLabel">Добавить Фото</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                   
+            </div>
+            <form id="addPhotoForm" >
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="photo-url">URL Фото</label>
+                        <input type="file" class="form-control" id="files" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="photo-description">Описание</label>
+                        <textarea class="form-control" id="photo-description" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Добавить Фото</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .photo-item {
+        position: relative;
+        margin-bottom: 15px;
+    }
+    .photo-item img {
+        width: 100%;
+        height: auto;
+    }
+    .photo-item .btn-delete, .photo-item .btn-edit {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        z-index: 10;
+    }
+    .photo-item .btn-edit {
+        right: 50px;
+    }
+</style>
+
+<script>
+   const form = document.getElementById("addPhotoForm");
+
+form.addEventListener("submit", submitForm);
+
+function submitForm(e) {
+    e.preventDefault();
+    const description = document.getElementById("photo-description").value.trim();
+    const files = document.getElementById("files").files;
+    const formData = new FormData();
+    const projectId = '<%= project.id %>'; // Получаем ID проекта из шаблона
+
+    if (files.length === 0) {
+        alert("Пожалуйста, выберите хотя бы один файл.");
+        return;
+    }
+
+    formData.append("description", description);
+    formData.append("projectId", projectId);
+    for (let i = 0; i < files.length; i++) {
+        formData.append("files", files[i]);
+    }
+
+    fetch(`/api/photo/`, {
+        method: 'POST',
+        body: formData
+    })
+        .then((res) => res.json())  // Предполагаем, что сервер возвращает JSON
+        .then((data) => {
+            if (data.success) {
+                window.location.reload(); // Перезагружаем страницу, чтобы обновить список материалов
+            } else {
+                alert("Произошла ошибка при загрузке: " + data.message);
+            }
+        })
+        .catch((err) => {
+            console.log("Error occurred", err);
+            alert("Произошла ошибка при загрузке.");
+        });
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    const deleteButtons = document.querySelectorAll('.delete-photo');
+
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            const photoId = this.getAttribute('data-id');
+
+            if (confirm('Вы уверены, что хотите удалить это фото?')) {
+                fetch(`/api/photo/${photoId}`, {
+                    method: 'DELETE',
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        this.closest('.col-md-4').remove();
+                    } else {
+                        alert('Ошибка при удалении фото: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка:', error);
+                    alert('Произошла ошибка при удалении.');
+                });
+            }
+        });
+    });
+});
+
+
+</script>
